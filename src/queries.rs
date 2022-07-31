@@ -1,13 +1,7 @@
-use cosmwasm_std::{
-    coin, Addr, Deps, Env, Order, StdResult, Uint128,
-};
+use cosmwasm_std::{coin, Addr, Deps, Env, Order, StdResult, Uint128};
 use cw_storage_plus::Bound;
 
-
-use crate::{
-    msg::{QueryResponse},
-    state::State,
-};
+use crate::{msg::QueryResponse, state::State};
 
 pub fn get_config(deps: Deps, _env: Env) -> StdResult<QueryResponse> {
     let state = State::default();
