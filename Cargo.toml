@@ -40,7 +40,10 @@ optimize = """docker run --rm -v "$(pwd)":/code \
   cosmwasm/rust-optimizer:0.12.6
 """
 prepare = """cargo clippy -- -D warnings && \
-cargo fmt --all -- --check 
+cargo fmt --all -- --check && \
+cargo schema && \
+cargo test && \
+cargo build
 """
 
 [dependencies]
