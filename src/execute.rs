@@ -17,7 +17,7 @@ pub fn fund(deps: DepsMut, _env: Env, info: MessageInfo) -> Result<Response, Con
                 None
             }
         })
-        .unwrap_or(Uint128::zero());
+        .unwrap_or_else(Uint128::zero);
     state
         .shares
         .update::<_, StdError>(deps.storage, info.sender, |shares| {

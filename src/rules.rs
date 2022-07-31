@@ -33,7 +33,7 @@ pub const SENT_FUNDS: Rule = |deps, _env, info, state| {
                 None
             }
         })
-        .unwrap_or(Uint128::zero())
+        .unwrap_or_else(Uint128::zero)
         .is_zero()
     {
         return Err(StdError::generic_err("Amount must be positive"));
