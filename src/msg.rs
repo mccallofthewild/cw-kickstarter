@@ -1,4 +1,4 @@
-use cosmwasm_std::{Coin, CosmosMsg, Timestamp, Uint128};
+use cosmwasm_std::{to_binary, Binary, Coin, CosmosMsg, StdError, Timestamp, Uint128};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -45,29 +45,47 @@ pub enum QueryMsg {
     GetTotalFunds {},
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
-pub enum QueryResponse {
-    // returns config
-    GetConfigResponse {
-        goal: Coin,
-        deadline: Timestamp,
-        name: String,
-        description: String,
-    },
-    // returns a user's shares in the project.
-    GetSharesResponse {
-        address: String,
-        shares: Uint128,
-    },
-    // returns a list of all funders and their shares.
-    GetFundersResponse {
-        funders: Vec<(String, Uint128)>,
-    },
-    // Get Total Funds Response
-    GetTotalFundsResponse {
-        total_funds: Coin,
-    },
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)] // returns config
+pub struct GetConfigResponse {
+    pub goal: Coin,
+    pub deadline: Timestamp,
+    pub name: String,
+    pub description: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)] // returns a user's shares in the project.
+pub struct GetSharesResponse {
+    pub address: String,
+    pub shares: Uint128,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)] // returns a list of all funders and their shares.
+pub struct GetFundersResponse {
+    pub funders: Vec<(String, Uint128)>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)] // Get Total Funds Response
+pub struct GetTotalFundsResponse {
+    pub total_funds: Coin,
+}
+
+#[derive(Serialize, Clone, Debug, PartialEq, JsonSchema)]
+pub enum QueryResponseWrapper {
+    GetConfigResponse(GetConfigResponse),
+    GetSharesResponse(GetSharesResponse),
+    GetFundersResponse(GetFundersResponse),
+    GetTotalFundsResponse(GetTotalFundsResponse),
+}
+
+impl QueryResponseWrapper {
+    pub fn to_binary(&self) -> Result<Binary, StdError> {
+        match self {
+            QueryResponseWrapper::GetConfigResponse(x) => to_binary(x),
+            QueryResponseWrapper::GetSharesResponse(x) => to_binary(x),
+            QueryResponseWrapper::GetFundersResponse(x) => to_binary(x),
+            QueryResponseWrapper::GetTotalFundsResponse(x) => to_binary(x),
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

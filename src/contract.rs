@@ -1,10 +1,10 @@
 #[cfg(not(feature = "library"))]
 use cosmwasm_std::entry_point;
-use cosmwasm_std::{to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
+use cosmwasm_std::{Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
 use cw2::set_contract_version;
 
 use crate::error::ContractError;
-use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, QueryResponse};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, QueryResponseWrapper};
 use crate::state::{Config, State};
 use crate::{execute, queries, rules};
 
@@ -76,7 +76,7 @@ pub fn execute(
 
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
-    let output: StdResult<QueryResponse> = match msg {
+    let output: StdResult<QueryResponseWrapper> = match msg {
         QueryMsg::GetConfig {} => queries::get_config(deps, env),
         QueryMsg::GetShares { user } => queries::get_shares(deps, env, user),
         QueryMsg::GetFunders { limit, start_after } => {
@@ -84,7 +84,7 @@ pub fn query(deps: Deps, env: Env, msg: QueryMsg) -> StdResult<Binary> {
         }
         QueryMsg::GetTotalFunds {} => queries::get_funds(deps, env),
     };
-    to_binary(&output?)
+    output?.to_binary()
 }
 
 #[cfg(test)]
