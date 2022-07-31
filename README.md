@@ -1,4 +1,6 @@
-# Cosmwasm Kickstarter Crowdfunding Contract (prototype)
+# Cosmwasm Kickstarter Crowdfunding Contract
+
+> **NOTE: This was built for fun in a couple hours. Not production ready.**
 
 ## Summary 
 Simple kickstarter crowdfunding contract that enables users to fund projects, but only if they reach their funding goals by a set deadline. If the goal is reached, an execute message can be invoked. If it is not reached, the contract will automatically enable anyone to claim their funds and/or refund others.
